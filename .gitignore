@@ -1,0 +1,4 @@
+# Corpus documents and passage tables contain copyrighted text and belong in S3, never here
+*.parquet
+*.pdf
+*.PDF

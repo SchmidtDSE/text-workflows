@@ -1,0 +1,51 @@
+# Emperor Seamount Chain literature corpus: the first corpus, and the pilot for the stack.
+id: high-seas-lit
+title: Emperor Seamount Chain literature corpus
+description: >-
+  Literature compiled as a dossier on the Emperor Seamount Chain (EBSA NP_18, "Emperor Seamount
+  Chain and Northern Hawaiian Ridge"), organised by the sections of a site description. It
+  supports evidence assessment against the BBNJ Annex I criteria in the High Seas app.
+status: growing  # documents will continue to be added; each build is a snapshot
+
+sources:
+  - s3: s3://high-seas-lit/   # NRP s3-west; one prefix per section folder, names kept as received
+    exclude: [derived/, pilot/]
+
+access: private  # passage text stays in this bucket; codes, metadata and places may be public
+licence_policy: >-
+  Per document. Most documents are publisher copyright and may not be redistributed.
+
+# Section folders as received, 2026-10-27. Numbers follow the dossier's outline; gaps are
+# sections not yet compiled. The full outline is held by the compilers (to be recorded).
+sections:
+  "4": Bathymetry, Geography and Geology
+  "5": Physical oceanography
+  "5.1.5": Fluxes of particulate organic carbon on Seamounts
+  "6": Chemical oceanography
+  "7.1.3": Microorganisms
+  "7.1.5": Mid-water nekton
+  "7.1.6": Marine mammals and seabirds
+  "7.2.1": Diel (daily) vertical migration
+  "7.4": Ecosystem function
+  "8.2.1": Microorganisms
+  "8.2.3": Megafauna
+  "8.2.4": Corals
+  "8.2.5": Sponges
+  "8.2.7": Macrofauna and meiofauna
+  "8.2.8": Benthic and demersal nekton
+  "8.5": Ecosystem function
+
+processing:
+  ocr_languages: [eng]   # add rus, jpn, kor if non-English documents are added
+  places:
+    h3_resolution: 5
+    gazetteers: [gebco-undersea-features, marine-regions]
+
+inventory_2026_10_27:
+  files: 204
+  pdfs: 202
+  unique_pdfs: 193
+  pages: 6102
+  scanned_pdfs_without_text: 8
+  other: ["6.Chemical oceanography/Kassem and Shamberger, 2026_Data file.csv",
+          "8.2.4.Corals, 8.2.5.Sponges/참고문헌 링크.docx"]

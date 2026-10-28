@@ -486,7 +486,7 @@ Claude's, written blind to both models on 48 passages (4 per paper); a person sh
 (`kev-latest`, a 4B pointer head on Qwen3.5-4B-Base, `jaredpalmer/kev-4b@v1.0`). Kev lies
 between Laya and Jev and much closer to Jev, except on location.** Jev was not rerun: Kev is
 compared with the stored Jev and Laya answers and the same 48 reference labels. The script is
-`pilot/compare.py`; Kev's output is `pilot2-kev.parquet`.
+`pilot/compare.py`; Kev's codes were not kept, and `pilot/README.md` shows how to rerun them.
 
 | | Laya | Kev | Jev |
 |---|---|---|---|

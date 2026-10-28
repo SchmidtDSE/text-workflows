@@ -14,6 +14,7 @@ rerun.
 | `code.py` | Runs a codebook on any Jev-compatible endpoint, configured by environment variables |
 | `labels.py` | Reference labels for the 48-passage sample, written blind to both models; a person should check them |
 | `score.py` | Scores each model's codes against the labels |
+| `compare.py` | Compares Kev with the stored Laya and Jev codes, against the labels and against Jev |
 
 ## Rerunning
 
@@ -31,7 +32,12 @@ DECISION_MODEL='~typesafe/jev-latest' python3 code.py bbnj-annex1.yaml passages.
 # Laya: batched requests
 DECISION_URL=$LAYA_URL/v1/systemone DECISION_TOKEN=$LAYA_API_KEY DECISION_BATCH=32 \
 python3 code.py bbnj-annex1.yaml passages.parquet laya.parquet
+
+# Kev: one request per passage; it takes the Laya key
+DECISION_URL=https://kev.carlboettiger.info/v1/systemone DECISION_TOKEN=$LAYA_API_KEY \
+DECISION_MODEL=kev-latest python3 code.py bbnj-annex1.yaml passages.parquet pilot2-kev.parquet
 ```
 
 `score.py` expects `label-sample.parquet`, `pilot2-coded.parquet` (Laya) and
-`pilot2-jev.parquet` in the working directory; copy them from the bucket.
+`pilot2-jev.parquet` in the working directory; copy them from the bucket. `compare.py` also
+expects `pilot2-kev.parquet` and the full run's Jev codes at `../full/coded-jev.parquet`.

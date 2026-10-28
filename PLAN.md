@@ -232,8 +232,9 @@ deployment or supplied per request.
 
 - **Decision model:** any service that accepts the Jev request body, `state` plus named
   `noul`, `choice` and `score` questions, and returns per-question probabilities. Jev on
-  OpenRouter (`https://openrouter.ai/api/v1/systemone`, `~typesafe/jev-latest`) and Laya on
-  the NRP course server are both of this kind today.
+  OpenRouter (`https://openrouter.ai/api/v1/systemone`, `~typesafe/jev-latest`), Laya on
+  the NRP course server and Kev (`https://kev.carlboettiger.info/v1/systemone`, `kev-latest`)
+  are all of this kind today.
 - **Extraction model:** any OpenAI-compatible chat endpoint with structured output, for
   example DeepSeek V4 Flash on OpenRouter or an open-weights model on NRP.
 - **Embedding model, if used:** any OpenAI-compatible embeddings endpoint.
@@ -479,6 +480,44 @@ Claude's, written blind to both models on 48 passages (4 per paper); a person sh
   through, and lost the body text of one paper. Two PDFs carried useless embedded titles. These
   are the jobs of GROBID and the metadata stage.
 
+### Kev comparison
+
+**On 2026-10-28 we coded the same 1,534 passages with Kev, a free self-hosted decision model
+(`kev-latest`, a 4B pointer head on Qwen3.5-4B-Base, `jaredpalmer/kev-4b@v1.0`). Kev lies
+between Laya and Jev and much closer to Jev, except on location.** Jev was not rerun: Kev is
+compared with the stored Jev and Laya answers and the same 48 reference labels. The script is
+`pilot/compare.py`; Kev's output is `pilot2-kev.parquet`.
+
+| | Laya | Kev | Jev |
+|---|---|---|---|
+| Time and cost | 406 s, free, batched | 1,011 s, free, 8 requests at a time | 163 s, $0.17 |
+| Site label correct | 37% | 49% | 74% |
+| Taxon correct | 44% | 70% | 81% |
+| Criteria recall at P > 0.5 | 9 of 31 | 25 of 31 | 29 of 31 |
+| Criteria precision at P > 0.5 | 9 of 15 | 25 of 45 | 29 of 52 |
+| Criteria recall at P > 0.7 | 3 of 31 | 17 of 31 | 27 of 31 |
+| `strength` score spread (SD on a 0–3 scale) | 0.20 | 0.47 | 0.73 |
+| Correlation with Jev on criteria, all passages | 0.37 | 0.85 | |
+| Site agreement with Jev, Emperor feature and chain merged | 64% | 79% | |
+
+- **Both Jev and Kev are deterministic.** The full run recoded the pilot passages with Jev, and
+  the two Jev runs agree on 97–99% of labels and score identically on the reference labels.
+  A rerun of 200 passages on Kev changed no label or threshold call, and no probability by more
+  than 0.005. The differences between the models are therefore real, not noise.
+- **Kev tracks Jev on the criteria.** Its per-criterion correlation with Jev is 0.77–0.95 for 19
+  of the 22 criteria. It over-fires less on `crit_n_processes` (17% of passages above 0.7,
+  against 28%) and `crit_t_replication` (10% against 16%), but its probabilities reach 0.7 less
+  often, so 0.5 is the better threshold for Kev.
+- **Kev places too much on the Emperor chain.** It puts 174 passages on the chain that Jev puts
+  elsewhere, and 25 the other way, including 43 of 81 passages of a paper that Jev places off the
+  chain. It also prefers `emperor_feature` where Jev picks `emperor_chain`.
+- **Kev is free but slower.** It has no batch route, so the full corpus would take about 2.5 hours
+  at this concurrency, against 20 minutes and $1.53 for Jev.
+
+**Jev remains the default decision model.** Kev is a reasonable choice for preprocessing where
+speed does not matter, and for GLEN text deployments that need a free option. Laya is no longer
+needed as the free comparison.
+
 ## Decisions for Carl
 
 - Who holds the full dossier outline and the missing sections?
@@ -492,13 +531,13 @@ Decided:
 - Data coverage is a second axis on every pillar, not a separate theme.
 - Neither the corpus nor the data is final. Both will keep growing, so every build is a snapshot
   and every pipeline is incremental.
-- The pilot runs on Laya, our hosted Jev-compatible endpoint, which is free and high capacity.
-  Jev is the comparison for the questions where Laya's scores collapse.
+- Jev is the default decision model. Kev is the free option, for preprocessing where speed does
+  not matter and for GLEN text deployments that need one (Kev comparison, 2026-10-28).
 - New repositories in the SchmidtDSE organisation: `corpus-ingest`, `corpus-workflows` and
   `text-query`. Existing repositories will be renamed when they migrate: `cng-datasets` to
   `geo-ingest`, `data-workflows` to `geo-workflows` and `mcp-data-server` to `geo-query`.
 - Corpora are described with Croissant, CSL-JSON and a README and `AGENTS.md`, with a thin STAC
   record for discovery. Spatial metadata follows Portolan.
 - GROBID runs as a cluster service, deployed from the corpus processing repository.
-- Models are pluggable endpoints with tokens. Jev and Laya are interchangeable decision models.
+- Models are pluggable endpoints with tokens. Jev, Kev and Laya are interchangeable decision models.
 - The design serves any GLEN app; high seas is the first use case.

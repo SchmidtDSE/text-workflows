@@ -2,7 +2,7 @@
 
 This repository holds recipes and scope for corpora, not code and not data. The design is in
 [PLAN.md](PLAN.md). Tool knowledge belongs with the tools: OCR, GROBID and segmentation in
-`corpus-ingest`, and codebook design and model endpoints in `text-query`.
+`text-ingest`, and codebook design and model endpoints in `text-query`.
 
 ## Scope lives in the issue
 

@@ -5,7 +5,7 @@ folder, with the BBNJ Annex I codebook, on Laya and on Jev. Results and conclusi
 Pilot results section of [PLAN.md](../PLAN.md). Inputs and outputs, which contain passage
 text, are in the private bucket at `s3://high-seas-lit/pilot/2026-10-27/`.
 
-These scripts are stand-ins for `corpus-ingest` and `text-query`, kept so the comparison can be
+These scripts are stand-ins for `text-ingest` and `text-query`, kept so the comparison can be
 rerun.
 
 | Script | Purpose |

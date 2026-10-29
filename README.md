@@ -1,7 +1,7 @@
-# corpus-workflows
+# text-workflows
 
 Recipes, scope and coded runs for document corpora. A corpus is processed into AI-ready,
-cloud-native tables by [`corpus-ingest`](https://github.com/SchmidtDSE/corpus-ingest), and
+cloud-native tables by [`text-ingest`](https://github.com/SchmidtDSE/text-ingest), and
 coded with a codebook by [`text-query`](https://github.com/SchmidtDSE/text-query). This
 repository records what each corpus is meant to cover and how each published table was made.
 It is the text counterpart of

@@ -1,6 +1,6 @@
 """Pilot passage extraction: PDFs to one row per paragraph.
 
-A stand-in for the GROBID structure stage of corpus-ingest. Text blocks come from PyMuPDF.
+A stand-in for the GROBID structure stage of text-ingest. Text blocks come from PyMuPDF.
 Blocks repeated on three or more pages (download footers, running heads) and table-of-contents
 lines are dropped, short consecutive blocks are merged up to paragraph length, and everything
 after a References heading is dropped.
